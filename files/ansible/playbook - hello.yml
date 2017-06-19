@@ -1,0 +1,29 @@
+- name: Hello Ansible - quick start
+  hosts: 127.0.0.1
+  user: vagrant
+  sudo: yes
+
+  tasks:
+    - name: install the latest version of ntpdate
+      package:
+        name: yum-utils
+        state: latest
+
+    - name: Install packages needed for Docker
+      package: name=yum-utils state=present
+      package: name=device-mapper-persistent-data state=present
+      package: name=lvm2 state=present
+    
+    - name: Add Docker repository
+      yum_repository:
+        name: docker
+        description: Docker repo
+        baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+
+    - name: Install Docker
+      package: name=makecache state=present
+      package: name=fast state=present
+      package: name=docker-ce state=present
+
+    - name: Starting Docker
+      systemd: state=started name=docker	
